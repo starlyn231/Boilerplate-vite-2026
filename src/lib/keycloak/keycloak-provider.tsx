@@ -19,7 +19,7 @@ export function KeycloakProvider({ children }: { children: ReactNode }) {
     keycloak.onAuthRefreshError = () => setAuthenticated(false)
 
     keycloak
-      .init({ onLoad: 'check-sso', pkceMethod: 'S256' })
+      .init({ onLoad: 'login-required', pkceMethod: 'S256' })
       .then((isAuthenticated) => {
         setAuthenticated(isAuthenticated)
         setInitialized(true)
