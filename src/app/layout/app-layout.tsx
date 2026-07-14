@@ -1,20 +1,37 @@
-import { Link, Outlet } from 'react-router-dom'
-import { AuthStatus } from '@/features/auth'
+import { Outlet } from 'react-router-dom'
+import { cn } from '@/lib/utils'
+import { AppHeader } from './app-header'
+import { AppSidebar } from './app-sidebar'
+import { Backdrop } from './backdrop'
+import { SidebarProvider } from './sidebar-provider'
+import { useSidebar } from './use-sidebar'
+
+function LayoutContent() {
+  const { isExpanded, isHovered } = useSidebar()
+
+  return (
+    <div className="min-h-svh">
+      <AppSidebar />
+      <Backdrop />
+      <div
+        className={cn(
+          'flex min-h-svh flex-col transition-all duration-300 ease-in-out',
+          isExpanded || isHovered ? 'lg:ml-64' : 'lg:ml-20',
+        )}
+      >
+        <AppHeader />
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  )
+}
 
 export function AppLayout() {
   return (
-    <div className="min-h-svh">
-      <header className="flex items-center justify-between border-b px-6 py-4">
-        <nav className="flex items-center gap-4 text-sm font-medium">
-          <Link to="/">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/profile">Perfil</Link>
-        </nav>
-        <AuthStatus />
-      </header>
-      <main className="px-6 py-8">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <LayoutContent />
+    </SidebarProvider>
   )
 }
